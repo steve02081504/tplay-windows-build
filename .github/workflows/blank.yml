@@ -20,7 +20,7 @@ jobs:
 
       - uses: lukka/get-cmake@latest
       - name: Setup vcpkg
-        uses: lukka/run-vcpkg@v11
+        uses: friendlyanon/setup-vcpkg@v1
 
       - name: Install Rust toolchain
         uses: dtolnay/rust-toolchain@stable
