@@ -18,16 +18,14 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
+      - uses: lukka/get-cmake@latest
+      - name: Setup vcpkg
+        uses: lukka/run-vcpkg@v11
+
       - name: Install Rust toolchain
         uses: dtolnay/rust-toolchain@stable
         with:
           toolchain: stable
-
-      - uses: lukka/get-cmake@latest
-      - name: Setup vcpkg
-        uses: lukka/run-vcpkg@v11
-        with:
-          runVcpkgInstall: true
 
       - name: Build tplay
         run: cargo install tplay
