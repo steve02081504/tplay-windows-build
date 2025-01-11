@@ -14,7 +14,6 @@ on:
 jobs:
   build:
     runs-on: windows-latest
-
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -23,17 +22,12 @@ jobs:
         uses: dtolnay/rust-toolchain@stable
         with:
           toolchain: stable
-      
-      - name: Install vcpkg
-        run: |
-          git clone https://github.com/microsoft/vcpkg.git
-          .\vcpkg\bootstrap-vcpkg.bat
-          .\vcpkg\vcpkg install opencv4:x64-windows-static-md
-        shell: pwsh
 
-      - name: Install cmake and ninja
-        run: choco install cmake ninja -y
-        shell: pwsh
+      - uses: lukka/get-cmake@latest
+      - name: Setup vcpkg
+        uses: lukka/run-vcpkg@v11
+        with:
+          runVcpkgInstall: true
 
       - name: Build tplay
         run: cargo install tplay
