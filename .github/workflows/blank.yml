@@ -21,7 +21,7 @@ jobs:
       - uses: lukka/get-cmake@latest
       - name: Setup vcpkg
         uses: friendlyanon/setup-vcpkg@v1
-      - run: vcpkg install llvm opencv4[contrib,nonfree,opencl]
+      - run: vcpkg install ffmpeg opencv4[contrib,nonfree,opencl]
 
       - name: Install Rust toolchain
         uses: dtolnay/rust-toolchain@stable
