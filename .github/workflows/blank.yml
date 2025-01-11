@@ -1,0 +1,53 @@
+name: Build tplay
+
+# Controls when the workflow will run
+on:
+  # Triggers the workflow on push or pull request events but only for the "master" branch
+  push:
+    branches: [ "master" ]
+  pull_request:
+    branches: [ "master" ]
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Install Rust toolchain
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          toolchain: stable
+      
+      - name: Install vcpkg
+        run: |
+          git clone https://github.com/microsoft/vcpkg.git
+          .\vcpkg\bootstrap-vcpkg.bat
+          .\vcpkg\vcpkg install opencv4:x64-windows-static-md
+        shell: pwsh
+
+      - name: Install cmake and ninja
+        run: choco install cmake ninja -y
+        shell: pwsh
+
+      - name: Build tplay
+        run: cargo install tplay
+        shell: pwsh
+
+      - name: Package tplay
+        run: |
+          mkdir tplay-bin
+          cp $(cargo build --release --message-format=json-render-diagnostics | jq -r '.executable // empty' | head -n 1) tplay-bin/
+          Compress-Archive -Path tplay-bin -DestinationPath tplay-bin.zip
+        shell: pwsh
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: tplay-exe
+          path: tplay-bin.zip
